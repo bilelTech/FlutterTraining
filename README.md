@@ -1418,15 +1418,467 @@ void _showBottomSheet(BuildContext context) {
 | **Fenêtre coulissante**   | BottomSheet	  | Menu ou info en bas de l’écran        |
 
 ## 8. Connexion à une API REST et Firebase
+Flutter permet de communiquer avec des API ou des serveurs distants grâce au package http.
+Cela vous permet d'effectuer des requêtes HTTP (GET, POST, PUT, DELETE, etc.) pour récupérer ou envoyer des données.
 ### 🔹 Consommer une API REST
+**1️⃣ Ajouter le package http à votre projet**
+Avant de commencer à utiliser le package http, vous devez l'ajouter à votre projet.
+**📌 Étapes :**
+- Ouvrez le fichier pubspec.yaml.
+- Ajoutez la dépendance suivante sous dependencies :
 ```dart
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^0.13.3  # Vérifiez la dernière version sur pub.dev
+```
+- Exécutez la commande pour installer la dépendance :
+```sh
+flutter pub get
+```
+**2️⃣ Effectuer une Requête HTTP GET**
+La requête GET est utilisée pour récupérer des données à partir d’un serveur distant.
+```dart
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 Future<void> fetchData() async {
-  final response = await http.get(Uri.parse("https://api.example.com/data"));
+  final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+
   if (response.statusCode == 200) {
-    print(response.body);
+    // Si la requête est réussie, parsez la réponse
+    var data = jsonDecode(response.body);
+    print(data);
+  } else {
+    // Si la requête échoue, affichez un message d'erreur
+    print('Erreur de chargement des données');
   }
 }
 ```
+**📌 Explication :**
+
+- http.get() : Effectue la requête GET.
+- jsonDecode() : Décode la réponse JSON en une structure de données Dart.
+- statusCode == 200 : Vérifie que la requête a réussi.
+**📌 Appeler la fonction dans le widget**
+```dart
+fetchData();  // Appelez cette fonction dans le `initState` ou lorsque vous en avez besoin
+```
+**3️⃣ Effectuer une Requête HTTP POST**
+La requête POST permet d'envoyer des données au serveur.
+**📌 Exemple : Requête POST**
+```dart
+Future<void> sendData() async {
+  final response = await http.post(
+    Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'title': 'Flutter Demo',
+      'body': 'This is a Flutter POST request.',
+      'userId': '1',
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    print('Données envoyées avec succès');
+  } else {
+    print('Erreur d\'envoi des données');
+  }
+}
+```
+**4️⃣ Effectuer une Requête HTTP PUT**
+La requête PUT permet de mettre à jour des données existantes sur le serveur.
+```dart
+Future<void> updateData() async {
+  final response = await http.put(
+    Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'id': '1',
+      'title': 'Flutter Demo (Updated)',
+      'body': 'This is the updated Flutter PUT request.',
+      'userId': '1',
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    print('Données mises à jour avec succès');
+  } else {
+    print('Erreur de mise à jour des données');
+  }
+}
+```
+**5️⃣ Effectuer une Requête HTTP DELETE**
+La requête DELETE permet de supprimer une ressource sur le serveur.
+```dart
+Future<void> deleteData() async {
+  final response = await http.delete(
+    Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
+  );
+
+  if (response.statusCode == 200) {
+    print('Données supprimées avec succès');
+  } else {
+    print('Erreur de suppression des données');
+  }
+}
+```
+**6️⃣ Gestion des Erreurs**
+Lorsque vous effectuez des requêtes HTTP, vous devez toujours gérer les erreurs, telles que les erreurs de réseau ou de serveur.
+```dart
+Future<void> fetchDataWithErrorHandling() async {
+  try {
+    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print(data);
+    } else {
+      print('Erreur avec le code de statut : ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Erreur lors de la requête HTTP: $e');
+  }
+}
+```
+**7️⃣ Headers et Authentification**
+Les requêtes HTTP peuvent inclure des en-têtes pour envoyer des informations supplémentaires comme des tokens d'authentification.
+```dart
+Future<void> fetchWithAuth() async {
+  final response = await http.get(
+    Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+    headers: <String, String>{
+      'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    var data = jsonDecode(response.body);
+    print(data);
+  } else {
+    print('Erreur d\'authentification');
+  }
+}
+```
+**📌 Conclusion**
+| 🎯 Type de Requête	 | 🚀 Fonction	 | 📌 Utilisation
+|-----------|--------|---------------|
+| **GET**   | http.get()   |  Récupérer des données       |
+| **POST** | http.post()	 | Envoyer des données | 
+| **PUT**   | http.put()  | Mettre à jour des données   |
+| **DELETE**   | http.delete()	  | Supprimer des données  |  
+| **Gestion d'erreur**   | try-catch	 | Gérer les erreurs de réseau ou de serveur  |
+| **Headers & Auth**   | Authorization header	  | Authentification via token |    
+### 🔹  Gestion du JSON en Dart avec dart:convert
+En Flutter (et en Dart), les données des API sont souvent sous format JSON. Pour traiter ces données, on utilise le package intégré dart:convert.
+**📌 Exemple : Conversion JSON → Dart**
+```dart
+String jsonString = '{"nom": "Alice", "age": 25, "ville": "Paris"}';
+
+// Convertir la chaîne JSON en Map Dart
+Map<String, dynamic> data = jsonDecode(jsonString);
+
+print(data["nom"]);   // Alice
+print(data["age"]);   // 25
+print(data["ville"]); // Paris
+```
+**Convertir un Objet Dart en Chaîne JSON (jsonEncode)**
+Si on veut envoyer des données à une API, on doit convertir un objet Dart en chaîne JSON.
+```dart
+Map<String, dynamic> utilisateur = {
+  "nom": "Alice",
+  "age": 25,
+  "ville": "Paris"
+};
+
+// Convertir l'objet Dart en JSON
+String jsonString = jsonEncode(utilisateur);
+
+print(jsonString); // {"nom":"Alice","age":25,"ville":"Paris"}
+```
+**Gérer une Liste d’Objets JSON**
+Les API renvoient souvent des listes JSON (tableaux). On doit les convertir en List<Map<String, dynamic>>.
+```dart
+String jsonString = '''
+[
+  {"nom": "Alice", "age": 25},
+  {"nom": "Bob", "age": 30}
+]
+''';
+
+// Convertir en liste Dart
+List<dynamic> utilisateurs = jsonDecode(jsonString);
+
+for (var utilisateur in utilisateurs) {
+  print(utilisateur["nom"]); // Alice, puis Bob
+}
+```
+**Convertir JSON en Objet Dart avec une Classe (fromJson)**
+Pour mieux gérer les données JSON, on peut utiliser des classes Dart.
+```dart
+class Utilisateur {
+  String nom;
+  int age;
+
+  Utilisateur({required this.nom, required this.age});
+
+  // Factory pour convertir JSON → Objet Dart
+  factory Utilisateur.fromJson(Map<String, dynamic> json) {
+    return Utilisateur(
+      nom: json["nom"],
+      age: json["age"],
+    );
+  }
+}
+
+void main() {
+  String jsonString = '{"nom": "Alice", "age": 25}';
+  Map<String, dynamic> jsonData = jsonDecode(jsonString);
+
+  Utilisateur utilisateur = Utilisateur.fromJson(jsonData);
+  print(utilisateur.nom); // Alice
+}
+```
+**Convertir un Objet Dart en JSON (toJson)**
+Si on veut envoyer un objet à une API, il faut le convertir en JSON.
+```dart
+class Utilisateur {
+  String nom;
+  int age;
+
+  Utilisateur({required this.nom, required this.age});
+
+  // JSON → Objet Dart
+  factory Utilisateur.fromJson(Map<String, dynamic> json) {
+    return Utilisateur(
+      nom: json["nom"],
+      age: json["age"],
+    );
+  }
+
+  // Objet Dart → JSON
+  Map<String, dynamic> toJson() {
+    return {
+      "nom": nom,
+      "age": age,
+    };
+  }
+}
+
+void main() {
+  Utilisateur utilisateur = Utilisateur(nom: "Alice", age: 25);
+  
+  // Convertir en JSON
+  String jsonString = jsonEncode(utilisateur.toJson());
+
+  print(jsonString); // {"nom":"Alice","age":25}
+}
+```
+### 🔹 Utilisation d’une Base de Données Locale en Flutter avec sqflite et Hive
+Lorsque vous développez une application Flutter, vous pouvez avoir besoin de stocker des données localement (hors ligne). Deux solutions populaires existent :
+
+- sqflite : Une base de données SQLite pour des données structurées (relationnelles).
+- Hive : Une base de données NoSQL rapide, idéale pour stocker des objets simples.
+**🎯 1️⃣ Utilisation de sqflite (Base de Données SQLite)**
+📌 Quand utiliser sqflite ?
+- Si vous avez besoin de relations entre données.
+- Si vous voulez effectuer des requêtes SQL.
+**➤ Installation de sqflite et path_provider**
+  Ajoutez ces dépendances dans pubspec.yaml :
+```dart
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.3.0
+  path_provider: ^2.1.2  # Pour stocker la BD dans un bon emplacement
+```
+Ensuite, exécutez la commande :
+```sh
+flutter pub get
+```
+**➤ Configuration de la base de données**
+Dans database_helper.dart, créez une classe pour gérer SQLite :
+```dart
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+class DatabaseHelper {
+  static Database? _database;
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+
+  DatabaseHelper._privateConstructor();
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDatabase();
+    return _database!;
+  }
+
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'app_database.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+    );
+  }
+
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER NOT NULL
+      )
+    ''');
+  }
+}
+```
+**📌 Explication :**
+
+- getDatabasesPath() : Trouve le chemin où enregistrer la BD.
+- openDatabase() : Ouvre la BD et la crée si elle n’existe pas.
+- onCreate : Crée la table users avec id, name, et age.
+**➤ Insérer des données**
+Ajoutez cette méthode à DatabaseHelper :
+```dart
+Future<int> insertUser(Map<String, dynamic> user) async {
+  Database db = await database;
+  return await db.insert('users', user);
+}
+```
+Utilisation :
+```dart
+await DatabaseHelper.instance.insertUser({
+  'name': 'Alice',
+  'age': 25
+});
+```
+**➤ Lire les données**
+```dart
+Future<List<Map<String, dynamic>>> getUsers() async {
+  Database db = await database;
+  return await db.query('users');
+}
+```
+Utilisation :
+```dart
+List<Map<String, dynamic>> users = await DatabaseHelper.instance.getUsers();
+print(users);
+```
+**➤ Mettre à jour des données**
+```dart
+Future<int> updateUser(int id, Map<String, dynamic> user) async {
+  Database db = await database;
+  return await db.update('users', user, where: 'id = ?', whereArgs: [id]);
+}
+```
+**➤ Supprimer un utilisateur**
+```dart
+Future<int> deleteUser(int id) async {
+  Database db = await database;
+  return await db.delete('users', where: 'id = ?', whereArgs: [id]);
+}
+```
+**🎯 2️⃣ Utilisation de Hive (Base de Données NoSQL)**
+📌 Quand utiliser Hive ?
+- Si vous voulez stocker des objets rapidement.
+- Si vous n'avez pas besoin de relations complexes.
+Pour les performances élevées.
+**➤ Installation de Hive**
+Ajoutez les dépendances dans pubspec.yaml :
+```dart
+dependencies:
+  flutter:
+    sdk: flutter
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+dev_dependencies:
+  hive_generator: ^2.0.0
+  build_runner: ^2.4.6
+```
+Puis, exécutez :
+```sh
+flutter pub get
+```
+**➤ Configuration de Hive**
+Ajoutez cette ligne dans main.dart :
+```dart
+import 'package:hive_flutter/hive_flutter.dart';
+
+void main() async {
+  await Hive.initFlutter();
+  runApp(MyApp());
+}
+```
+**➤ Créer un Modèle avec Hive**
+Hive utilise des adapters pour stocker des objets.
+Créez user.dart :
+```dart
+import 'package:hive/hive.dart';
+
+part 'user.g.dart'; // Nécessaire pour générer le code
+
+@HiveType(typeId: 0)
+class User extends HiveObject {
+  @HiveField(0)
+  String name;
+
+  @HiveField(1)
+  int age;
+
+  User({required this.name, required this.age});
+}
+```
+Puis, exécutez :
+```sh
+flutter pub run build_runner build
+```
+Cela générera un fichier user.g.dart.
+**➤ Ouvrir une Boîte (Base de Données)**
+```dart
+Future<void> openBox() async {
+  await Hive.openBox<User>('users');
+}
+```
+**➤ Insérer un Utilisateur**
+```dart
+var box = Hive.box<User>('users');
+box.add(User(name: "Alice", age: 25));
+```
+**➤ Lire les Données**
+```dart
+var users = Hive.box<User>('users').values.toList();
+for (var user in users) {
+  print(user.name);
+}
+```
+**➤ Mettre à Jour un Utilisateur**
+
+```dart
+User user = box.getAt(0);
+user.name = "Alice Updated";
+user.save();
+```
+**➤ Supprimer un Utilisateur**
+```dart
+box.deleteAt(0);
+```
+
+**🎯 Comparaison : sqflite vs Hive**
+| 🎯 Critère	 | sqflite	 | Hive
+|-----------|--------|---------------|
+| **Type**   | Base SQL   | Base NoSQL       |
+| **Complexité** | Complexe (SQL)	 | Simple (objets) | 
+| **Performance**   | Moyen  | Très rapide   |
+| **Relations entre données**   | ✅ Oui		  | ❌ Non  |  
+| **Taille des données**   | Grande	 | Petite  |  
+
 **7️⃣ Détection de Tous les Gestes**
 GestureDetector peut gérer plusieurs événements en même temps.
 ```dart
@@ -1443,16 +1895,168 @@ GestureDetector(
   ),
 )
 ```
-🔹 Intégration Firebase
-- Authentification Firebase (Google, Facebook, Email)
-- Firestore Database (Stockage en temps réel)
-Exemple : Connexion avec Firebase Authentication
+### 🔹 Firebase dans Flutter : Firestore & Authentification
+Firebase est un Backend-as-a-Service (BaaS) qui fournit plusieurs services comme Firestore (base de données NoSQL) et l'authentification utilisateur.
+
+- 🔹 Firestore → Base de données NoSQL en temps réel.
+- 🔹 Authentication → Connexion via e-mail, Google, Facebook, etc.
+**1️⃣ Configuration de Firebase dans Flutter**
+**📌 Étape 1 : Créer un projet Firebase**
+- Allez sur Firebase Console et créez un projet.
+- Ajoutez une application Flutter (Android & iOS).
+- Téléchargez et ajoutez les fichiers google-services.json (Android) et GoogleService-Info.plist (iOS).
+**📌 Étape 2 : Installer Firebase dans Flutter**
+- Ajoutez ces dépendances dans pubspec.yaml :
 ```dart
-UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-  email: "user@example.com",
-  password: "password123",
-);
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: latest_version
+  cloud_firestore: latest_version
+  firebase_auth: latest_version
 ```
+Puis exécutez :
+```sh
+flutter pub get
+```
+**📌 Étape 3 : Initialiser Firebase**
+- Modifiez main.dart :
+```dart
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+```
+**✅ Firebase est maintenant prêt à être utilisé !**
+**2️⃣ Firestore : Base de Données NoSQL**
+- Firestore permet de stocker et récupérer des données
+**📌 Ajouter des Données**
+```dart
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+void addUser(String name, int age) {
+  FirebaseFirestore.instance.collection('users').add({
+    'name': name,
+    'age': age,
+    'createdAt': FieldValue.serverTimestamp(),
+  });
+}
+```
+**📌 Lire les Données**
+```dart
+void getUsers() async {
+  QuerySnapshot querySnapshot =
+      await FirebaseFirestore.instance.collection('users').get();
+
+  for (var doc in querySnapshot.docs) {
+    print(doc.data());
+  }
+}
+```
+
+**📌 Lire les Données en Temps Réel**
+```dart
+void listenToUsers() {
+  FirebaseFirestore.instance.collection('users').snapshots().listen((snapshot) {
+    for (var doc in snapshot.docs) {
+      print(doc.data());
+    }
+  });
+}
+```
+**📌 Explication :**
+- .snapshots().listen() permet d'écouter les changements en temps réel.
+**📌 Mettre à Jour un Document**
+```dart
+void updateUser(String userId, String newName) {
+  FirebaseFirestore.instance.collection('users').doc(userId).update({
+    'name': newName,
+  });
+}
+```
+**📌 Supprimer un Document**
+```dart
+void deleteUser(String userId) {
+  FirebaseFirestore.instance.collection('users').doc(userId).delete();
+}
+```
+**3️⃣ Authentification Firebase**
+- Firebase Auth permet de gérer la connexion des utilisateurs.
+**📌 Inscription par Email & Mot de Passe**
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<void> signUp(String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    print("Utilisateur créé : ${userCredential.user!.uid}");
+  } catch (e) {
+    print("Erreur : $e");
+  }
+}
+```
+**📌 Connexion par Email & Mot de Passe**
+```dart
+Future<void> signIn(String email, String password) async {
+  try {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    print("Connecté : ${userCredential.user!.uid}");
+  } catch (e) {
+    print("Erreur : $e");
+  }
+}
+```
+
+**📌 Déconnexion**
+```dart
+Future<void> signOut() async {
+  await FirebaseAuth.instance.signOut();
+  print("Déconnecté !");
+}
+```
+**📌 Vérifier l'État de Connexion**
+```dart
+void checkAuthState() {
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      print("Utilisateur déconnecté");
+    } else {
+      print("Utilisateur connecté : ${user.uid}");
+    }
+  });
+}
+```
+**📌 Connexion avec Google**
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+Future<void> signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    print("Utilisateur connecté : ${userCredential.user!.displayName}");
+  } catch (e) {
+    print("Erreur : $e");
+  }
+}
+```
+
 ## 9. Animations et Effets Visuels
 ### 🔹 Animation simple avec AnimatedContainer
 ```dart
