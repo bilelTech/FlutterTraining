@@ -627,22 +627,182 @@ class _MyCounterState extends State<MyCounter> {
 }
 ```
 ### 🔹 Widgets de base
-- Text() → Afficher du texte
-- Container() → Boîte avec padding, margin, background
-- Row() et Column() → Disposition horizontale et verticale
-- ListView() → Liste scrollable
-- Image.asset() / Image.network() → Affichage d’images
-Exemple :
+Flutter repose sur des widgets pour construire l’interface utilisateur. Voici les widgets de base indispensables :
+- ✅ Text → Afficher du texte
+- ✅ Image → Afficher une image
+- ✅ Container → Boîte avec des marges, padding, couleur
+- ✅ Row & Column → Disposer les éléments horizontalement ou verticalement
+- ✅ ListView → Liste défilante
+- ✅ ElevatedButton → Bouton interactif
+- ✅ Scaffold → Structure de base d'une page
+#### 1️⃣ Widget Text (Afficher du texte)
+Le widget Text permet d'afficher du texte avec plusieurs styles.
+**Exemple : Texte simple**
+```dart
+Text("Bonjour, Flutter !");
+```
+**Texte avec style**
+```dart
+Text(
+  "Bienvenue sur Flutter",
+  style: TextStyle(
+    fontSize: 20, 
+    fontWeight: FontWeight.bold, 
+    color: Colors.blue
+  ),
+);
+```
+#### 2️⃣ Widget Image (Afficher des images)
+Flutter permet d'afficher des images depuis :
+- 📌 Un fichier local (AssetImage)
+- 📌 Internet (NetworkImage)
+**🔹 Image depuis un fichier local**
+Ajoute l’image dans **pubspec.yaml**:
+```dart
+flutter:
+  assets:
+    - assets/images/flutter_logo.png
+```
+Puis dans le code :
+```dart
+Image.asset("assets/images/flutter_logo.png");
+```
+**🔹 Image depuis Internet**
+```dart
+Image.network("https://flutter.dev/images/flutter-logo-sharing.png");
+```
+#### 3️⃣ Widget Container (Bloc personnalisable)
+Container est un widget flexible pour ajouter :
+- 🟩 Couleur de fond
+- 📏 Taille
+- 🎨 Marges & Padding
+***🔹 Exemple d’un Container stylisé***
+```dart
+Container(
+  width: 200,
+  height: 100,
+  padding: EdgeInsets.all(10),
+  margin: EdgeInsets.symmetric(vertical: 10),
+  decoration: BoxDecoration(
+    color: Colors.blue,
+    borderRadius: BorderRadius.circular(10),
+  ),
+  child: Text("Hello Flutter", style: TextStyle(color: Colors.white)),
+);
+```
+#### 4️⃣ Widgets Row & Column (Alignement d’éléments)
+- Row → Disposition horizontale
+- Column → Disposition verticale
+
+**🔹 Exemple Row (alignement horizontal)**
+```dart
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceAround,
+  children: [
+    Icon(Icons.star, color: Colors.orange),
+    Icon(Icons.star, color: Colors.orange),
+    Icon(Icons.star, color: Colors.orange),
+  ],
+);
+```
+**🔹 Exemple Column (alignement vertical)**
 ```dart
 Column(
+  mainAxisAlignment: MainAxisAlignment.center,
   children: [
-    Text("Bienvenue dans Flutter!"),
-    Image.network("https://flutter.dev/assets/homepage/logo.png"),
+    Text("Élément 1"),
+    SizedBox(height: 10), // Espacement
+    Text("Élément 2"),
   ],
-)
+);
 ```
+| Propriété | Explication 
+|-----------|--------|
+| **mainAxisAlignment**   | Alignement principal (start, center, end, spaceAround, spaceBetween)   |
+| **crossAxisAlignment** | Alignement secondaire (start, center, end) |
+#### 5️⃣ Widget ListView (Liste défilante dynamique)
+ListView est utilisé pour afficher des listes longues, avec ou sans défilement.
+**🔹 Liste simple**
+```dart
+ListView(
+  children: [
+    ListTile(title: Text("Élément 1")),
+    ListTile(title: Text("Élément 2")),
+    ListTile(title: Text("Élément 3")),
+  ],
+);
+```
+**🔹 Liste dynamique (générée avec ListView.builder)**
+```dart
+ListView.builder(
+  itemCount: 10,
+  itemBuilder: (context, index) {
+    return ListTile(
+      title: Text("Élément ${index + 1}"),
+    );
+  },
+);
+```
+#### 6️⃣ Widget ElevatedButton (Bouton interactif)
+Permet d'ajouter un bouton cliquable.
+**🔹 Exemple de bouton**
+```dart
+ElevatedButton(
+  onPressed: () {
+    print("Bouton cliqué !");
+  },
+  child: Text("Clique-moi"),
+);
+```
+**🔹 Bouton avec style**
+```dart
+ElevatedButton(
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue,
+    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  ),
+  onPressed: () {},
+  child: Text("Appuyer", style: TextStyle(color: Colors.white)),
+);
+```
+#### 7️⃣ Widget Scaffold (Structure d’une page complète)
+Le Scaffold est le squelette d’une application Flutter. Il inclut :
+- ✅ AppBar → Barre supérieure
+- ✅ Body → Contenu principal
+- ✅ FloatingActionButton → Bouton flottant
+**🔹 Exemple d’un Scaffold**
+```dart
+  Scaffold(
+  appBar: AppBar(title: Text("Mon App")),
+  body: Center(child: Text("Bienvenue")),
+  floatingActionButton: FloatingActionButton(
+    onPressed: () {},
+    child: Icon(Icons.add),
+  ),);
+```
+**🎯 Résumé des Widgets de Base**
+| Concept | Explication | Mot-clé 
+|-----------|--------|---------------|
+| **Text**   | Affiche du texte   |  Text("Bonjour")        |
+| **Image** | Affiche une image	 | Image.asset("path") | 
+| **Container**   | Encapsule et stylise un élément  | Container(color: Colors.blue)        |
+| **Row**   | Affichage horizontal	  | Row(children: [...])        |
+| **Column**   | Affichage vertical	  | Column(children: [...])        |
+| **ListView**   | Liste défilante	  | ListView.builder(...)        |
+| **ElevatedButton**   | Bouton cliquable	 | ElevatedButton(onPressed: ..., child: Text(...))     |
+| **Scaffold**   | Structure d’une page	  | Scaffold(appBar: ..., body: ...)     |
+
 ## 4. Navigation entre les écrans
 Flutter utilise Navigator pour gérer les transitions entre les pages.
+En Flutter, chaque écran est appelé une route et est géré par un Navigator.
+📌 Méthodes principales du Navigator :
+
+- push() → Aller vers un nouvel écran.
+- pop() → Revenir à l’écran précédent.
+- pushReplacement() → Remplace l’écran actuel par un nouveau.
+- pushAndRemoveUntil() → Supprime tous les écrans et affiche un nouvel écran.
+1️⃣ Navigation de Base avec Navigator.push()
+Utilisation de MaterialPageRoute pour naviguer vers un nouvel écran.
 ### 🔹 Passer d’un écran à un autre
 ```dart
 Navigator.push(
@@ -661,6 +821,43 @@ Navigator.push(
   MaterialPageRoute(builder: (context) => SecondScreen(data: "Hello")),
 );
 ```
+### 🔹 Retourner un Résultat à l'Écran Précédent
+Un écran peut retourner un résultat à l’écran précédent via Navigator.pop(context, result).
+```dart
+Navigator.pop(context, "Option A")
+```
+### 🔹Remplacer un Écran avec pushReplacement()
+```dart
+Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => HomeScreen()),
+);
+```
+**📌 Cas d’utilisation :**
+
+- Après une connexion réussie.
+- Après un splash screen.
+```dart
+Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(builder: (context) => HomeScreen()),
+  (route) => false, // Supprime toutes les routes
+);
+```
+**📌 Cas d’utilisation :**
+- Après une déconnexion (retour à l’écran de connexion).
+- Après une réinitialisation d’application.
+
+**📌 Conclusion**
+| Concept | Explication 
+|-----------|--------
+| **push()**   | Aller vers un nouvel écran   
+| **pop()** | Revenir à l’écran précédent   
+| **pushReplacement()**   | Remplace l’écran actuel 
+| **pushAndRemoveUntil()**   | Supprime l’historique et ouvre un nouvel écran	 
+| **pushNamed()**   | Naviguer avec des routes nommées
+
+### 🔹Supprimer l’Historique avec pushAndRemoveUntil()
 ## 5. Gestion de l’état
 Il existe plusieurs façons de gérer l’état d’une application Flutter :
 🔹 **setState()** → Gestion d’état locale
@@ -670,6 +867,16 @@ setState(() {
 });
 ```
 🔹 Provider → Gestion d’état globale
+Provider est une solution officielle de Flutter pour gérer l’état globalement.
+**📌 Ajouter Provider au projet**
+Ajoutez provider dans pubspec.yaml :
+```dart
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.0
+```
+**📌 Créer un ChangeNotifier pour gérer l’état**
 ```dart
 class CounterProvider with ChangeNotifier {
   int _counter = 0;
@@ -682,7 +889,535 @@ class CounterProvider with ChangeNotifier {
   }
 }
 ```
-## 6. Connexion à une API REST et Firebase
+## 6. Interaction avec l’Utilisateur
+### 🔹 Formulaires et gestion des entrées utilisateur (TextField, Form, TextEditingController)
+Les formulaires sont essentiels pour les inscriptions, connexions, recherches et d’autres interactions utilisateur. En Flutter, nous utilisons TextField, Form, et TextEditingController pour capturer et gérer les entrées utilisateur.
+**1️⃣ TextField – Le Champ de Saisie de Base**
+Exemple : Champ de texte simple
+```dart
+TextField(
+  decoration: InputDecoration(
+    labelText: "Entrez votre nom",
+    border: OutlineInputBorder(),
+  ),
+)
+```
+**📌 Personnalisation :**
+
+- labelText → Affiche un texte dans le champ.
+- border: OutlineInputBorder() → Ajoute une bordure.
+- hintText → Donne une indication à l’utilisateur.
+**2️⃣ Gérer le Texte avec TextEditingController**
+Pour récupérer et manipuler la valeur d’un TextField, on utilise TextEditingController.
+**📌 Exemple : Lire l’entrée utilisateur**
+```dart
+class TextFieldExample extends StatefulWidget {
+  @override
+  _TextFieldExampleState createState() => _TextFieldExampleState();
+}
+
+class _TextFieldExampleState extends State<TextFieldExample> {
+  TextEditingController _controller = TextEditingController();
+
+  void _showText() {
+    print("Texte saisi : ${_controller.text}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("TextField Controller")),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: "Entrez du texte",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _showText,
+              child: Text("Afficher le Texte"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+**📌 Explication :**
+
+- TextEditingController récupère le texte saisi.
+- _controller.text accède au contenu du champ.
+- Le bouton affiche la valeur dans la console.
+
+**3️⃣ Form & TextFormField – Validation des Données**
+Pour valider les champs, on utilise un Form avec TextFormField.
+```dart
+class FormExample extends StatefulWidget {
+  @override
+  _FormExampleState createState() => _FormExampleState();
+}
+
+class _FormExampleState extends State<FormExample> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      print("Email Valide : ${_emailController.text}");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Formulaire avec Validation")),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Veuillez entrer un email";
+                  } else if (!value.contains("@")) {
+                    return "Email invalide";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: Text("Valider"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+**4️⃣ Masquer le Texte (Mot de Passe)**
+On peut masquer un texte en utilisant obscureText: true.
+```dart
+TextField(
+  obscureText: true,
+  decoration: InputDecoration(
+    labelText: "Mot de passe",
+    border: OutlineInputBorder(),
+  ),
+)
+```
+5️⃣ Plusieurs Champs dans un Formulaire
+Créons un formulaire email + mot de passe avec validation.
+**📌 Exemple : Formulaire de Connexion**
+```dart
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      print("Connexion réussie !");
+      print("Email : ${_emailController.text}");
+      print("Mot de passe : ${_passwordController.text}");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Connexion")),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return "Veuillez entrer un email";
+                  if (!value.contains("@")) return "Email invalide";
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: _obscurePassword,
+                decoration: InputDecoration(
+                  labelText: "Mot de passe",
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.length < 6) return "Mot de passe trop court";
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _submit,
+                child: Text("Se connecter"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+**📌 Conclusion**
+| Fonctionnalité | Widget Utilisé 
+|-----------|--------|
+| **Champ de texte simple**   | Aller vers un nouvel écran   |
+| **Lire le texte saisi** | Revenir à l’écran précédent  |  
+| **Valider les données**   | Remplace l’écran actuel  |
+| **Masquer le mot de passe**   | Supprime l’historique et ouvre un nouvel écran	  |
+| **Bouton pour afficher/cacher**   | Naviguer avec des routes nommées	  |
+| **Plusieurs champs dans un formulaire** | Column + TextFormField
+
+### 🔹 Gestion des événements (onTap, onPressed)
+En Flutter, les interactions utilisateur sont capturées via des événements comme clics, tapotements, gestes et plus encore. Les plus courants sont onTap et onPressed, mais d’autres existent pour gérer différents types d’actions.
+**1️⃣ onPressed – Bouton Cliquable**
+L’événement onPressed est utilisé principalement avec les boutons (ElevatedButton, TextButton, IconButton).
+```dart
+ElevatedButton(
+  onPressed: () {
+    print("Bouton appuyé !");
+  },
+  child: Text("Appuyez-moi"),
+)
+```
+**📌 Explication :**
+Lorsque l’utilisateur clique, la fonction affiche un message dans la console.*
+**2️⃣ onTap – Détection du Tapotement**
+Si un widget n’a pas de onPressed, on peut utiliser GestureDetector ou InkWell pour détecter les taps.
+**📌 Exemple : Détection d’un Tap sur un Texte**
+```dart
+GestureDetector(
+  onTap: () {
+    print("Texte cliqué !");
+  },
+  child: Text(
+    "Cliquez ici",
+    style: TextStyle(fontSize: 20, color: Colors.blue),
+  ),
+)
+```
+**📌 Explication :**
+GestureDetector permet d’ajouter un comportement interactif à n’importe quel widget.
+**3️⃣ InkWell – Effet de Tap avec Animation**
+InkWell ajoute un effet visuel (ripple) lorsqu’on appuie sur un widget.
+**📌 Exemple : Carte Cliquable**
+```dart
+InkWell(
+  onTap: () {
+    print("Carte cliquée !");
+  },
+  child: Container(
+    padding: EdgeInsets.all(20),
+    decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+    child: Text("Cliquez-moi", style: TextStyle(color: Colors.white)),
+  ),
+)
+```
+**4️⃣ onLongPress – Pression Longue**
+Utile pour afficher un menu contextuel ou exécuter une action spéciale.
+
+**📌 Exemple : Bouton avec Pression Longue**
+```dart
+ElevatedButton(
+  onPressed: () {
+    print("Bouton pressé");
+  },
+  onLongPress: () {
+    print("Pression longue détectée !");
+  },
+  child: Text("Appuyez longtemps"),
+)
+```
+5️⃣ Détection de Glisser (Swipe)
+On peut détecter un glissement horizontal ou vertical avec GestureDetector.
+**📌 Exemple : Détecter un Swipe Gauche/Droite**
+```dart
+GestureDetector(
+  onHorizontalDragEnd: (details) {
+    if (details.primaryVelocity! > 0) {
+      print("Swipe vers la DROITE !");
+    } else {
+      print("Swipe vers la GAUCHE !");
+    }
+  },
+  child: Container(
+    width: double.infinity,
+    height: 200,
+    color: Colors.amber,
+    child: Center(child: Text("Glissez-moi")),
+  ),
+)
+```
+**6️⃣ Détection de Double Tap**
+Pour détecter un double tap, on utilise GestureDetector.
+**📌 Exemple : Double Tap pour Changer de Couleur**
+```dart
+class DoubleTapExample extends StatefulWidget {
+  @override
+  _DoubleTapExampleState createState() => _DoubleTapExampleState();
+}
+
+class _DoubleTapExampleState extends State<DoubleTapExample> {
+  Color _color = Colors.green;
+
+  void _changeColor() {
+    setState(() {
+      _color = _color == Colors.green ? Colors.red : Colors.green;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: GestureDetector(
+          onDoubleTap: _changeColor,
+          child: Container(
+            width: 200,
+            height: 200,
+            color: _color,
+            child: Center(child: Text("Double Tap", style: TextStyle(color: Colors.white))),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+### 🔹 Affichage de dialogues (AlertDialog, Snackbar)
+En Flutter, il est courant d’afficher des boîtes de dialogue et des notifications pour informer l’utilisateur, demander une confirmation, ou afficher une erreur. Les widgets les plus utilisés sont AlertDialog et Snackbar.
+
+**1️⃣ AlertDialog – Fenêtre Modale de Confirmation**
+Un AlertDialog est une boîte de dialogue qui bloque l’écran jusqu’à ce que l’utilisateur prenne une décision.
+
+**📌 Exemple : Affichage d’un AlertDialog**
+```dart
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Confirmation"),
+        content: Text("Voulez-vous continuer ?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Ferme la boîte de dialogue
+            },
+            child: Text("Annuler"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              print("Action confirmée !");
+              Navigator.of(context).pop(); // Ferme la boîte de dialogue
+            },
+            child: Text("Oui"),
+          ),
+        ],
+      );
+    },
+  );
+}
+```
+**📌 Explication :**
+
+- showDialog → Ouvre un dialogue.
+- AlertDialog → Contient un titre, un message, et des boutons d’action.
+- Navigator.of(context).pop() → Ferme le dialogue.
+**📌 Exemple : Bouton pour Afficher un AlertDialog**
+```dart
+ElevatedButton(
+  onPressed: () => _showDialog(context),
+  child: Text("Afficher le Dialogue"),
+)
+```
+**2️⃣ AlertDialog avec Champs de Texte**
+On peut ajouter un TextField dans un AlertDialog pour capturer une entrée utilisateur.
+**📌 Exemple : Demander un Nom d’Utilisateur**
+```dart
+void _showInputDialog(BuildContext context) {
+  TextEditingController _controller = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Votre Nom"),
+        content: TextField(
+          controller: _controller,
+          decoration: InputDecoration(hintText: "Entrez votre nom"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("Annuler"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              print("Nom saisi : ${_controller.text}");
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}
+```
+**3️⃣ Snackbar – Message Temporaire**
+Un Snackbar est une notification temporaire qui s’affiche en bas de l’écran.
+```dart
+void _showSnackbar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("Action effectuée !"),
+      duration: Duration(seconds: 2),
+    ),
+  );
+}
+```
+**📌 Explication :**
+- ScaffoldMessenger.of(context).showSnackBar() → Affiche un Snackbar.
+- duration → Détermine combien de temps il reste visible.
+**📌 Exemple : Bouton qui Affiche un Snackbar**
+```dart
+ElevatedButton(
+  onPressed: () => _showSnackbar(context),
+  child: Text("Afficher Snackbar"),
+)
+```
+**4️⃣ Snackbar avec Bouton d’Action**
+On peut ajouter un bouton interactif dans un Snackbar.
+**📌 Exemple : Snackbar avec "Annuler"**
+```dart
+void _showActionSnackbar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("Suppression en cours..."),
+      action: SnackBarAction(
+        label: "Annuler",
+        onPressed: () {
+          print("Suppression annulée !");
+        },
+      ),
+    ),
+  );
+}
+```
+**📌 Explication :**
+- SnackBarAction → Ajoute un bouton "Annuler".
+- onPressed → Exécute une action quand l’utilisateur appuie sur le bouton.
+**5️⃣ SimpleDialog – Liste d’Options**
+Un SimpleDialog est une boîte de dialogue affichant une liste d’options.
+**📌 Exemple : Sélectionner une Option**
+```dart
+void _showSimpleDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return SimpleDialog(
+        title: Text("Choisissez une option"),
+        children: [
+          SimpleDialogOption(
+            onPressed: () {
+              print("Option 1 sélectionnée");
+              Navigator.of(context).pop();
+            },
+            child: Text("Option 1"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              print("Option 2 sélectionnée");
+              Navigator.of(context).pop();
+            },
+            child: Text("Option 2"),
+          ),
+        ],
+      );
+    },
+  );
+}
+```
+**6️⃣ BottomSheet – Fenêtre Coulissante**
+Un BottomSheet est une boîte qui s’ouvre par le bas de l’écran.
+```dart
+void _showBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(20),
+        height: 200,
+        child: Column(
+          children: [
+            Text("Titre du BottomSheet", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text("Ceci est un BottomSheet."),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Fermer"),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+```
+**📌 Conclusion**
+| 🎯 Type de Boîte	 | 🚀 Widget Utilisé	 | 📌 Utilisation
+|-----------|--------|---------------|
+| **Boîte de dialogue**   | AlertDialog   |  Confirmation, alerte       |
+| **Snackbar** | SnackBar	 | Message temporaire | 
+| **Boîte d’options**   | SimpleDialog  | Liste d’options        |
+| **Fenêtre coulissante**   | BottomSheet	  | Menu ou info en bas de l’écran        |
+
+## 8. Connexion à une API REST et Firebase
 ### 🔹 Consommer une API REST
 ```dart
 Future<void> fetchData() async {
@@ -691,6 +1426,22 @@ Future<void> fetchData() async {
     print(response.body);
   }
 }
+```
+**7️⃣ Détection de Tous les Gestes**
+GestureDetector peut gérer plusieurs événements en même temps.
+```dart
+GestureDetector(
+  onTap: () => print("Tap détecté"),
+  onDoubleTap: () => print("Double Tap détecté"),
+  onLongPress: () => print("Pression Longue détectée"),
+  onVerticalDragUpdate: (details) => print("Glissement Vertical détecté"),
+  child: Container(
+    width: double.infinity,
+    height: 200,
+    color: Colors.lightBlue,
+    child: Center(child: Text("Interagissez avec moi")),
+  ),
+)
 ```
 🔹 Intégration Firebase
 - Authentification Firebase (Google, Facebook, Email)
@@ -702,7 +1453,7 @@ UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
   password: "password123",
 );
 ```
-## 7. Animations et Effets Visuels
+## 9. Animations et Effets Visuels
 ### 🔹 Animation simple avec AnimatedContainer
 ```dart
 AnimatedContainer(
@@ -719,7 +1470,7 @@ Hero(
   child: Image.asset("assets/image.png"),
 )
 ```
-## 8. Déploiement et Optimisation
+## 9. Déploiement et Optimisation
 ### 🔹 Générer un APK
 ```sh
 flutter build apk
