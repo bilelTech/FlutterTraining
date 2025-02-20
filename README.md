@@ -42,3 +42,29 @@
 - Compilation et génération des APK/IPA
 - Optimisation des performances (lazy loading, minimisation des rebuilds)
 - Publication sur Google Play Store et Apple App Store
+
+# 🚀 Formation Complète sur Flutter - Les Fondamentaux  
+
+## 1. Introduction à Flutter et Installation  
+
+### 🔷 Qu'est-ce que Flutter ?  
+Flutter est un framework open-source développé par Google permettant de créer des applications mobiles, web et desktop avec un seul code source. Il utilise le langage **Dart** et repose sur un système de **widgets** pour créer des interfaces utilisateur fluides et performantes.  
+
+### 🔷 Pourquoi utiliser Flutter ?  
+- Développement **cross-platform** (iOS, Android, Web, Desktop).  
+- Interface **100% personnalisable** avec des widgets flexibles.  
+- **Performances élevées** grâce au moteur Skia et au rendu natif.  
+- **Hot Reload** : permet de voir les modifications instantanément.  
+- Support de **Firebase, API REST, base de données**, etc.
+
+### 🔷 Installation de Flutter  
+1. Télécharger et installer **Flutter SDK** depuis [flutter.dev](https://flutter.dev).  
+2. Installer **Android Studio** ou **VS Code**.  
+3. Configurer les émulateurs (Android/iOS).  
+4. Vérifier l’installation avec la commande :  
+
+   ```sh
+   flutter doctor
+   sh```
+
+
