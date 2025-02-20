@@ -1,3 +1,5 @@
+# 🚀 Formation Complète sur Flutter - Les Fondamentaux  
+
 ## 1. Introduction à Flutter  
 - Qu'est-ce que Flutter ?  
 - Pourquoi utiliser Flutter ?  
@@ -42,8 +44,6 @@
 - Compilation et génération des APK/IPA
 - Optimisation des performances (lazy loading, minimisation des rebuilds)
 - Publication sur Google Play Store et Apple App Store
-
-# 🚀 Formation Complète sur Flutter - Les Fondamentaux  
 
 ## 1. Introduction à Flutter et Installation  
 
