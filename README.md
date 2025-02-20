@@ -380,8 +380,110 @@ void main() {
 | **Polymorphisme**   | Redéfinition des méthodes  | @override        |
 | **Abstraction**   | Modèle générique  | abstract        |
 | **Interface**   | Implémentation multiple  | implements        |
-| **Mixins**   | Ajouter des fonctionnalités  | with        |
-### 🔹 Asynchronisme en Dart (Future, async/await)
+| **Mixins**   | Ajouter des fonctionnalités  | with     |
+### 🔹 Asynchronisme en Dart (Future, async/await) 
+Dart est un langage asynchrone qui permet d'exécuter plusieurs tâches en parallèle sans bloquer l'application. L'asynchronisme repose principalement sur trois concepts :
+- ✅ Future : Représente une tâche qui sera terminée plus tard.
+- ✅ async/await : Simplifie la gestion des Future pour un code plus lisible.
+- ✅ Stream : Gère des suites de données asynchrones (ex : flux de données).
+### 🔹 Future : Exécution asynchrone
+- Un Future est une valeur qui sera disponible dans le futur après l'exécution d'une tâche asynchrone.
+**🔹 Créer un Future et utiliser then()**
+```dart
+Future<String> fetchData() {
+  return Future.delayed(Duration(seconds: 2), () => "Données chargées !");
+}
+
+void main() {
+  print("Début de la tâche...");
+  
+  fetchData().then((result) {
+    print(result); // Affiché après 2 secondes
+  });
+
+  print("Fin du programme !");
+}
+```
+### 🔹async/await : Simplifier l’attente des Future
+- L'utilisation de await permet d'attendre la fin d'un Future sans bloquer l'application.
+```dart
+Future<String> fetchData() async {
+  await Future.delayed(Duration(seconds: 2)); // Simule un délai
+  return "Données chargées !";
+}
+
+void main() async {
+  print("Début de la tâche...");
+
+  String result = await fetchData(); // Attente du résultat
+  print(result);
+
+  print("Fin du programme !");
+}
+```
+### 🔹Gérer les erreurs avec try/catch
+- Les erreurs dans les Future doivent être capturées pour éviter les crashs.
+```dart
+Future<String> fetchData() async {
+  await Future.delayed(Duration(seconds: 2));
+  throw Exception("Erreur de chargement !");
+}
+
+void main() async {
+  print("Début de la tâche...");
+
+  try {
+    String result = await fetchData();
+    print(result);
+  } catch (e) {
+    print("Erreur attrapée : $e");
+  }
+
+  print("Fin du programme !");
+}
+```
+### 🔹Future.wait() : Attendre plusieurs Future en parallèle
+- Si plusieurs tâches doivent être exécutées en parallèle, Future.wait() permet d’attendre toutes les réponses
+```dart
+Future<String> fetchUser() async {
+  await Future.delayed(Duration(seconds: 2));
+  return "Utilisateur chargé";
+}
+
+Future<String> fetchPosts() async {
+  await Future.delayed(Duration(seconds: 3));
+  return "Posts chargés";
+}
+
+void main() async {
+  print("Chargement des données...");
+
+  List<String> results = await Future.wait([fetchUser(), fetchPosts()]);
+  print(results[0]); // Utilisateur chargé
+  print(results[1]); // Posts chargés
+
+  print("Toutes les données sont chargées !");
+}
+```
+### 🔹Stream : Gérer un flux de données asynchrones
+- Contrairement à Future, un Stream permet d’envoyer plusieurs valeurs au fil du temps.
+```dart
+Stream<int> countStream() async* {
+  for (int i = 1; i <= 5; i++) {
+    await Future.delayed(Duration(seconds: 1));
+    yield i; // Envoie la valeur à chaque seconde
+  }
+}
+
+void main() async {
+  print("Début du Stream...");
+
+  await for (int value in countStream()) {
+    print("Valeur reçue : $value");
+  }
+
+  print("Fin du Stream !");
+}
 ```dart
 Future<String> fetchData() async {
   await Future.delayed(Duration(seconds: 2));
@@ -394,6 +496,23 @@ void main() async {
   print(data);
 }
 ```
+### 🔹Transformer un Stream en Future
+Parfois, on veut attendre la première valeur d’un Stream et l'utiliser comme un Future.
+```dart
+void main() async {
+  int firstValue = await countStream().first;
+  print("Première valeur : $firstValue"); // Première valeur : 1
+}
+```
+🎯  **Résumé des Concepts**
+| Concept | Explication | Mot-clé 
+|-----------|--------|---------------|
+| **Future**   | Exécuter une tâche asynchrone   |  Future        |
+| **async/await** | Attendre un Future sans bloquer | async, await | 
+| **Gestion des erreurs**   | Capturer les erreurs dans un Future  | try/catch        |
+| **Future.wait()**   | Exécuter plusieurs Future en parallèle  | Future.wait()        |
+| **Stream**   | Gérer plusieurs valeurs asynchrones  | Stream, yield        |
+| **Stream → Future**   | Récupérer une seule valeur d'un Stream	  | .first        |
 ### 🔹 Gestion des collections (List, Map, Set) flutter
 En Flutter (Dart), les collections comme List, Map et Set sont largement utilisées pour stocker et manipuler des données. Voici un aperçu de leur gestion avec des exemples pratiques.
 #### List
