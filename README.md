@@ -2084,4 +2084,4 @@ flutter build apk
 - Modifier android/app/build.gradle
 - Compiler l’APK et l’envoyer sur Google Play Console
 
-
+https://chatgpt.com/share/682a0ae5-23f0-8000-8a85-c779175631fc
