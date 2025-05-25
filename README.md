@@ -2085,3 +2085,4 @@ flutter build apk
 - Compiler l’APK et l’envoyer sur Google Play Console
 
 https://chatgpt.com/share/682a0ae5-23f0-8000-8a85-c779175631fc
+https://chatgpt.com/share/6833062f-2e94-8000-9451-47ee3baaa682
